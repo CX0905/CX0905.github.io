@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>陈曦 · 具身智能 & CV 算法</title>
+  <!-- 使用静态字体与清爽风格 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f6f9fc;
+      color: #1a2639;
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0, 20, 40, 0.08);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    /* 头部区域 ———— 照片 + 基本信息 */
+    .profile {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+      padding: 2.5rem 3rem;
+      background: linear-gradient(145deg, #ffffff 0%, #f8fcff 100%);
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .avatar {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #d0e2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 3rem;
+      color: #1f3a5f;
+      box-shadow: 0 8px 20px rgba(0, 40, 80, 0.08);
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="40" r="28" fill="%23b4d0e8"/><circle cx="35" cy="32" r="5" fill="%23f0f8ff"/><circle cx="65" cy="32" r="5" fill="%23f0f8ff"/><path d="M38 54 Q50 62 62 54" stroke="%232c3e5a" stroke-width="3" fill="none"/></svg>');
+      background-size: 70%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #e7f0fa;
+    }
+
+    .profile-text {
+      flex: 1;
+    }
+
+    .profile-text h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      color: #0b1c2e;
+    }
+
+    .profile-text .subhead {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #2c4b6f;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      margin-top: 0.3rem;
+    }
+
+    .profile-text .subhead span {
+      background: #eaf1fa;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1a3d62;
+    }
+
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 2rem;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #1f3f60;
+      background: #f2f8ff;
+      padding: 0.8rem 1.2rem;
+      border-radius: 60px;
+      align-items: center;
+    }
+
+    .contact-grid a {
+      color: #1f3f60;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dotted transparent;
+      transition: 0.15s;
+    }
+
+    .contact-grid a:hover {
+      border-bottom-color: #3d6b99;
+    }
+
+    .contact-grid .pill {
+      background: white;
+      padding: 0.15rem 1rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    }
+
+    /* 主体双栏 */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 2.2fr;
+      gap: 0;
+      background: #fafdff;
+    }
+
+    @media (max-width: 760px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .profile {
+        padding: 1.8rem;
+      }
+      .contact-grid {
+        border-radius: 30px;
+        padding: 0.7rem 1rem;
+      }
+    }
+
+    /* 左侧栏 ———— 教育 / 荣誉 / 技能 */
+    .sidebar {
+      background: #f6fafd;
+      padding: 2rem 1.8rem;
+      border-right: 1px solid #e3edf6;
+    }
+
+    .sidebar-section {
+      margin-bottom: 2.2rem;
+    }
+
+    .sidebar-section h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #3a6189;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+      border-bottom: 1px solid #d6e4f0;
+      padding-bottom: 0.5rem;
+    }
+
+    .edu-item {
+      margin-bottom: 1.2rem;
+    }
+
+    .edu-item .school {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #0b263f;
+    }
+
+    .edu-item .meta {
+      font-size: 0.9rem;
+      color: #305073;
+      margin: 0.2rem 0 0.2rem;
+    }
+
+    .edu-item .detail {
+      font-size: 0.9rem;
+      color: #1a3f62;
+      line-height: 1.6;
+    }
+
+    .edu-item .course-highlight {
+      background: white;
+      border-radius: 40px;
+      padding: 0.1rem 0.7rem;
+      display: inline-block;
+      font-size: 0.8rem;
+      margin-right: 0.3rem;
+      margin-top: 0.2rem;
+      background: #e9f2fa;
+      color: #1f4870;
+    }
+
+    .honor-list {
+      list-style: none;
+    }
+
+    .honor-list li {
+      font-size: 0.95rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #e2eefa;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .honor-list li::before {
+      content: "🏅";
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-right: 0.3rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .skill-tags span {
+      background: white;
+      border-radius: 30px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #1f4a72;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      border: 1px solid #dae8f5;
+    }
+
+    .lang-item {
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* 右侧 ———— 经历 / 项目 */
+    .content {
+      padding: 2rem 2.5rem 2.5rem 2.5rem;
+      background: white;
+    }
+
+    .content-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .content-section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #103450;
+      border-bottom: 1px solid #e3edf6;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .content-section h3::before {
+      content: "▹";
+      color: #2b6c9e;
+      font-size: 1.2rem;
+    }
+
+    .exp-item {
+      margin-bottom: 1.6rem;
+    }
+
+    .exp-item .exp-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-item .exp-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #0f2d49;
+    }
+
+    .exp-item .exp-org {
+      font-weight: 500;
+      color: #1d4d75;
+    }
+
+    .exp-item .exp-date {
+      font-size: 0.8rem;
+      color: #4b6d8f;
+      background: #ecf3fb;
+      padding: 0.1rem 0.9rem;
+      border-radius: 40px;
+      font-weight: 500;
+    }
+
+    .exp-item ul {
+      padding-left: 1.2rem;
+      margin-top: 0.4rem;
+      list-style: none;
+    }
+
+    .exp-item ul li {
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+      position: relative;
+      padding-left: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .exp-item ul li::before {
+      content: "•";
+      color: #2e6a9b;
+      font-weight: 700;
+      position: absolute;
+      left: 0;
+    }
+
+    .exp-item .highlight-badge {
+      background: #dae9f7;
+      border-radius: 20px;
+      padding: 0.1rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #15415f;
+      display: inline-block;
+      margin-left: 0.4rem;
+    }
+
+    .paper-tag {
+      background: #eef4fa;
+      border-radius: 20px;
+      padding: 0.1rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #1d4a6b;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+
+    .project-block {
+      margin-top: 0.2rem;
+    }
+
+    .project-block .project-title {
+      font-weight: 600;
+      color: #103c5c;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e0ebf5;
+      margin: 0.8rem 0;
+    }
+
+    /* 小字 */
+    .footnote {
+      color: #3f6485;
+      font-size: 0.9rem;
+      background: #f3f9ff;
+      border-radius: 30px;
+      padding: 0.5rem 1.2rem;
+      display: inline-block;
+    }
+
+    .badge-gold {
+      background: #f7f0d9;
+      color: #8e7a3a;
+    }
+
+    .inline-code {
+      background: #f0f5fc;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      font-family: 'Inter', monospace;
+      font-size: 0.85rem;
+    }
+
+    /* 响应式微调 */
+    @media (max-width: 600px) {
+      .content {
+        padding: 1.5rem;
+      }
+      .profile-text h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- 头部 -->
+  <div class="profile">
+    <div class="avatar" aria-label="陈曦头像"></div>
+    <div class="profile-text">
+      <h1>陈曦 · Xi Chen</h1>
+      <div class="subhead">
+        <span>具身算法 / CV算法</span>
+        <span>中共预备党员</span>
+        <span>安徽淮南</span>
+        <span>6个月+实习</span>
+      </div>
+      <div class="contact-grid">
+        <span>📧 <a href="mailto:cx20050905@mail.ustc.edu.cn">cx20050905@mail.ustc.edu.cn</a></span>
+        <span>📱 <a href="tel:+8613696772752">13696772752</a></span>
+        <span class="pill">📅 2005.09</span>
+        <span class="pill">🏛️ USTC</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 双栏 -->
+  <div class="main-grid">
+    <!-- 左侧 -->
+    <aside class="sidebar">
+      <!-- 教育 -->
+      <div class="sidebar-section">
+        <h3>🎓 教育背景</h3>
+        <div class="edu-item">
+          <div class="school">中国科学技术大学</div>
+          <div class="meta">网络空间安全学院 · 信息安全 | 2023.09 – 2027.06</div>
+          <div class="detail">
+            GPA 3.25/4.30 · Rank 13/30
+          </div>
+          <div style="margin-top: 0.4rem;">
+            <span class="course-highlight">随机过程 95</span>
+            <span class="course-highlight">数据建模 95</span>
+            <span class="course-highlight">机器学习 94</span>
+            <span class="course-highlight">复杂系统分析 92</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 荣誉 -->
+      <div class="sidebar-section">
+        <h3>🏅 荣誉 & 奖项</h3>
+        <ul class="honor-list">
+          <li>2025 奋进奖学金 · 综测 12/71</li>
+          <li>2023-2024 校级优秀共青团员</li>
+          <li>2023-2024 校级优秀共青团干部</li>
+          <li>iGEM 2025 全球金奖 (建模副组长)</li>
+          <li>CCPC 重庆站 二等奖 (校二队队长)</li>
+        </ul>
+      </div>
+
+      <!-- 技能 精简 -->
+      <div class="sidebar-section">
+        <h3>⚙️ 核心能力</h3>
+        <div class="skill-tags">
+          <span>Python/PyTorch</span><span>ROS/ROS2</span><span>Gazebo</span>
+          <span>Isaac Gym</span><span>3DGS/NeRF</span><span>Diffusion</span>
+          <span>SLAM/SFM</span><span>VoxHammer</span><span>多视图几何</span>
+          <span>刚体运动学</span><span>轨迹规划</span><span>Sim-to-Real</span>
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.9rem; color: #1f4a72;">
+          <div>🔹 机器人仿真 & 实机部署 (宇树G1)</div>
+          <div>🔹 三维重建/编辑全栈调研与复现</div>
+          <div>🔹 具身世界模型 · 安全关键场景</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧主要内容 -->
+    <main class="content">
+      <!-- 竞赛 & 项目经历 混合 -->
+      <div class="content-section">
+        <h3>🏆 竞赛 & 科研</h3>
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-title">iGEM 2025 · 全球金奖</span>
+            <span class="exp-date">2025</span>
+          </div>
+          <div><span class="exp-org">建模组副组长</span>  ·  数学建模 & 分子动力学模拟</div>
+          <ul>
+            <li>负责数学模型搭建与编程，评审专家高度认可“丰富且严谨”的建模部分</li>
+            <li>培训选拔后担任副组长，推动多尺度模型与实验数据融合</li>
+          </ul>
+        </div>
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-title">CCPC 重庆站 · 二等奖</span>
+            <span class="exp-date">2024</span>
+          </div>
+          <div><span class="exp-org">校二队队长</span></div>
+          <ul>
+            <li>带领团队完成高难度算法题，获得赛区二等奖</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 项目经历 -->
+      <div class="content-section">
+        <h3>🔬 研究 & 项目</h3>
+        <!-- 项目1 -->
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-title">具身智能安全 · 系统安全组</span>
+            <span class="exp-date">2025.05 – 2026.04</span>
+          </div>
+          <ul>
+            <li>系统学习人形机器人基础、ROS/ROS2架构，基于Gazebo/RViz仿真与可视化调试</li>
+            <li>提升复杂物理环境下行为安全性，论文在投 <span class="paper-tag">CCS 2026</span></li>
+            <li>具备仿真到实物迁移的基本工程能力</li>
+          </ul>
+        </div>
+        <!-- 项目2 -->
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-title">面向安全关键场景的具身世界模型</span>
+            <span class="exp-date">2026.04 – 今</span>
+          </div>
+          <div><span class="exp-org">苏州人工智能重点实验室</span></div>
+          <ul>
+            <li><strong>Sim-to-Real:</strong> 化学实验室资产合成、多体仿真、任务训练与真机迁移，关注物理属性与多体耦合</li>
+            <li><strong>WAM框架:</strong> 多层预测与风险评估，物理因果链推演+资产风险属性，感知-行动-后果闭环，异常临界自动警报</li>
+          </ul>
+        </div>
+        <!-- 项目3 3D重建 -->
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-title">3D视觉重建 & 编辑 · 调研复现</span>
+            <span class="exp-date">2026.04 – 2026.06</span>
+          </div>
+          <ul>
+            <li>系统梳理3DGS、NeRF、SLAM/SFM、SDS优化、多视图编辑、原生3D扩散等范式，完成调研报告</li>
+            <li>完整复现 <span class="highlight-badge">CVPR 2025 VoxHammer</span> 免训练局部编辑框架，基于TRELLIS结构化3D扩散</li>
+            <li>实现RF-Solver反演、KV替换、隐变量编辑，掌握扩散模型反演、多视角渲染、3D体素掩码生成</li>
+            <li>完成 VoxHammer 从 TRELLIS 到 TRELLIS.2-4B 完整移植，解决 encoder 缺失、K/V 缓存、注意力层 patch 等 7 大难点</li>
+          </ul>
+          <div style="margin-top: 0.4rem; background: #f2f8ff; border-radius: 30px; padding: 0.3rem 1rem; display: inline-block; font-size: 0.85rem;">
+            ⚡ Python/PyTorch 推理流水线 · 3D生成底层机制
+          </div>
+        </div>
+        <!-- 额外技能描述 -->
+        <div style="background: #f5faff; border-radius: 20px; padding: 0.6rem 1.2rem; margin-top: 0.5rem; border-left: 3px solid #2b6c9e;">
+          <span style="font-weight: 500;">📌 理论基础：</span> 线性代数、概率论、优化理论；刚体运动学/动力学建模、轨迹规划；3D生成/重建核心方法。
+        </div>
+      </div>
+
+      <!-- 证书/其他 -->
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e1edf9;">
+        <span class="footnote">🏅 奋进奖学金 · 综测12/71</span>
+        <span class="footnote">🤖 宇树G1实机部署</span>
+        <span class="footnote">📄 论文在投 CCS 2026</span>
+        <span class="footnote">🧪 iGEM 建模金奖</span>
+      </div>
+    </main>
+  </div>
+  <!-- 极简footer -->
+  <div style="background: #fafdff; padding: 0.8rem 2.5rem; border-top: 1px solid #e3edf6; font-size: 0.8rem; color: #446688; display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <span>中国科学技术大学 · 网络空间安全学院 2023级</span>
+    <span>📅 更新 2026.07 · 实习意向：具身算法 / CV算法</span>
+  </div>
+</div>
+<!-- 装饰说明：简历信息完全依照 cv (1).pdf 提取 -->
+</body>
+</html>
